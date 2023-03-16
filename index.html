@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ordinals of Hope</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 70vh;
+      }
+
+      header {
+        display: block;
+        margin: 0 auto 0.5em;
+        width: 700px;
+        padding-top: 40px;
+      }
+
+      h1 {
+        font-weight: bold;
+        margin-bottom: 0.5em;
+        letter-spacing: .05px;
+        line-height: .5; 
+        justify-content: center;
+      }
+
+      h2 {
+        font-weight: normal;
+        margin-bottom: 5em;
+        letter-spacing: 0.5px;
+      }
+
+       .btn {
+        background: linear-gradient(to bottom, #ff5f00, #ff7f00);
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+        padding: 15px 30px;
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 3em;
+      }
+
+
+      button:hover {
+        background: linear-gradient(to bottom, #ff7f00, #ff5f00);
+      }
+
+      button:focus {
+        outline: none;
+      }
+
+      button span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      button svg {
+        fill: #FFFFFF;
+        height: 20px;
+        margin-right: 10px;
+        width: 20px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>  
+  <body>
+    <header>
+      <img src="./logo.png" alt="Logo" class="logo">
+      <h1>Ordinals of Hope</h1>
+      <h2>Capture Your Daily Inspyration. Inscribe It On The ₿lockchain</h2>
+      <button id="form-button" type="button" class="btn">Inscribe Your Inspiration</button>
+    </header>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var formButton = document.getElementById('form-button');
+        formButton.addEventListener('click', function() {
+          window.location.href = 'form.html';
+        });
+      });
+    </script>
+  </body>
+</html>
