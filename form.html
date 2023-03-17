@@ -84,9 +84,22 @@ const inspirationTextarea = document.getElementById("recent-inspiration");
 const inspirationCounter = document.getElementById("inspiration-counter");
 const maxInspirationLength = inspirationTextarea.getAttribute("maxlength");
 
+const colors = {
+  blue: "rgb(0, 128, 255)",
+  yellow: "orange",
+  red: "rgb(255, 0, 0)"
+};
+
 inspirationTextarea.addEventListener("input", () => {
   const currentLength = inspirationTextarea.value.length;
   inspirationCounter.textContent = `${currentLength}/${maxInspirationLength} characters`;
+  if (currentLength <= 200) {
+    inspirationCounter.style.color = colors.blue;
+  } else if (currentLength <= 250) {
+    inspirationCounter.style.color = colors.yellow;
+  } else {
+    inspirationCounter.style.color = colors.red;
+  }
 });
 
 form.addEventListener("submit", async (event) => {
@@ -113,6 +126,7 @@ form.addEventListener("submit", async (event) => {
     const jsonCode = JSON.stringify(jsonResponse, null, 2);
     const codeDisplay = document.createElement("pre");
     codeDisplay.textContent = jsonCode;
+    jsonContainer.innerHTML = "";
     jsonContainer.appendChild(codeDisplay);
     copyButton.removeAttribute("disabled");
 
@@ -124,6 +138,12 @@ form.addEventListener("submit", async (event) => {
   form.reset();
 });
 
+function generateWordOfTheDay() {
+  const words = ["serendipity", "euphoria", "syzygy", "ineffable", "petrichor", "luminescence", "ethereal", "supine", "incandescent", "diaphanous"];
+  const randomIndex = Math.floor(Math.random() * words.length);
+  return words[randomIndex];
+}
+
 copyButton.addEventListener("click", () => {
   const range = document.createRange();
   range.selectNodeContents(jsonContainer.querySelector("pre"));
@@ -133,11 +153,5 @@ copyButton.addEventListener("click", () => {
   document.execCommand("copy");
   copyButton.textContent = "JSON Copied!";
 });
-
-function generateWordOfTheDay() {
-  const words = ["serendipity", "euphoria", "syzygy", "ineffable", "petrichor", "luminescence", "ethereal", "supine", "incandescent", "diaphanous"];
-  const randomIndex = Math.floor(Math.random() * words.length);
-  return words[randomIndex];
-}
   </script>
 </head>
