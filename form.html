@@ -98,17 +98,36 @@ inspirationTextarea.addEventListener("input", () => {
   }
 });
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
   const submission = Object.fromEntries(formData.entries());
   const wordOfTheDay = generateWordOfTheDay();
   submission["word-of-the-day"] = wordOfTheDay;
-  const jsonCode = JSON.stringify(submission, null, 2);
-  const codeDisplay = document.createElement("pre");
-  codeDisplay.textContent = jsonCode;
-  jsonContainer.appendChild(codeDisplay);
-  copyButton.removeAttribute("disabled");
+
+  try {
+    const response = await fetch('/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(submission)
+    });
+
+    if (!response.ok) {
+      throw new Error('There was a problem submitting the form');
+    }
+
+    const jsonResponse = await response.json();
+    const jsonCode = JSON.stringify(jsonResponse, null, 2);
+    jsonDisplay.textContent = jsonCode;
+    copyButton.removeAttribute("disabled");
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+
   form.reset();
 });
 
