@@ -1,139 +1,77 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <title>Positive Affirmation Generator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .form-container {
-      width: 100%;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .input-container {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    label {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    textarea {
-      width: 100%;
-      height: 100px;
-      padding: 5px;
-      font-size: 16px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .character-counter {
-      margin-top: 5px;
-      font-size: 14px;
-      font-style: italic;
-    }
-
-    .counter-green {
-      color: green;
-    }
-
-    .counter-yellow {
-      color: orange;
-    }
-
-    .counter-red {
-      color: red;
-    }
-
-    .btn-container {
-      width: 100%;
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
-    }
-
-    button {
-      padding: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      background-color: #008CBA;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-
-    button:hover {
-      background-color: #005F6B;
-    }
-
-    .json-container {
-      width: 100%;
-      padding: 20px;
-      margin-top: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .copy-container {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    #copy-button {
-      margin-left: 5px;
-      padding: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      background-color: #008CBA;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-
-    #copy-button:hover {
-      background-color: #005F6B;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Inspiration Form</title>
+  <link rel="stylesheet" href="form.css">
 </head>
-
 <body>
-  <div class="container">
-    <h1>Positive Affirmation Generator</h1>
-    <div class="form-container">
-      <div class="input-container">
-        <label for="affirmation-textarea">Enter your affirmation:</label>
-        <textarea id="affirmation-textarea" maxlength="280" placeholder="Enter your affirmation here..."></textarea>
-        <div id="char-counter" class="
+  <form id="form">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" placeholder="Brief summary of entry" required>
+    </div>
+
+    <div class="form-group">
+      <label for="inscriber">Inscriber</label>
+      <input type="text" id="inscriber" name="inscriber" placeholder="Your name/pen name">
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input type="date" id="date" name="date" required>
+    </div>
+
+    <div class="form-group">
+      <label for="recent-inspiration">Recent Inspiration (max 280 characters)</label>
+      <textarea id="recent-inspiration" name="recent-inspiration" placeholder="What inspired you in the last 24 hours that made a difference or impact on you" required maxlength="280"></textarea>
+      <div id="inspiration-counter"></div>
+    </div>
+
+    <button type="submit">Generate</button>
+  </form>
+
+  <div id="json-container"></div>
+
+  <script>
+    const form = document.getElementById("form");
+    const jsonContainer = document.getElementById("json-container");
+    const copyButton = document.createElement("button");
+    copyButton.setAttribute("id", "copy-button");
+    copyButton.setAttribute("disabled", "");
+    copyButton.textContent = "Copy JSON to Clipboard";
+    jsonContainer.appendChild(copyButton);
+
+    const inspirationTextarea = document.getElementById("recent-inspiration");
+    const inspirationCounter = document.getElementById("inspiration-counter");
+    const maxInspirationLength = inspirationTextarea.getAttribute("maxlength");
+
+    inspirationTextarea.addEventListener("input", () => {
+      const currentLength = inspirationTextarea.value.length;
+      inspirationCounter.textContent = `${currentLength}/${maxInspirationLength} characters`;
+    });
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      const submission = Object.fromEntries(formData.entries());
+      const jsonCode = JSON.stringify(submission, null, 2);
+      const codeDisplay = document.createElement("pre");
+      codeDisplay.textContent = jsonCode;
+      jsonContainer.appendChild(codeDisplay);
+      copyButton.removeAttribute("disabled");
+      form.reset();
+    });
+
+    copyButton.addEventListener("click", () => {
+      const range = document.createRange();
+      range.selectNodeContents(jsonContainer.querySelector("pre"));
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand("copy");
+      copyButton.textContent = "JSON Copied!";
+    });
+  </script>
+</body>
+</html>
