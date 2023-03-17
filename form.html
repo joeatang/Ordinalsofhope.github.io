@@ -31,47 +31,86 @@
     <button type="submit">Generate</button>
   </form>
 
-  <div id="json-container"></div>
+  <div class="json-container" id="json-container">
+    <button class="copy-button" id="copy-button" disabled>Copy JSON to Clipboard</button>
+    <div class="json-display" id="json-display"></div>
+  </div>
 
-  <script>
-    const form = document.getElementById("form");
-    const jsonContainer = document.getElementById("json-container");
-    const copyButton = document.createElement("button");
-    copyButton.setAttribute("id", "copy-button");
-    copyButton.setAttribute("disabled", "");
-    copyButton.textContent = "Copy JSON to Clipboard";
-    jsonContainer.appendChild(copyButton);
-
-    const inspirationTextarea = document.getElementById("recent-inspiration");
-    const inspirationCounter = document.getElementById("inspiration-counter");
-    const maxInspirationLength = inspirationTextarea.getAttribute("maxlength");
-
-    inspirationTextarea.addEventListener("input", () => {
-      const currentLength = inspirationTextarea.value.length;
-      inspirationCounter.textContent = `${currentLength}/${maxInspirationLength} characters`;
-    });
-
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const formData = new FormData(event.target);
-      const submission = Object.fromEntries(formData.entries());
-      const jsonCode = JSON.stringify(submission, null, 2);
-      const codeDisplay = document.createElement("pre");
-      codeDisplay.textContent = jsonCode;
-      jsonContainer.appendChild(codeDisplay);
-      copyButton.removeAttribute("disabled");
-      form.reset();
-    });
-
-    copyButton.addEventListener("click", () => {
-      const range = document.createRange();
-      range.selectNodeContents(jsonContainer.querySelector("pre"));
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      selection.addRange(range);
-      document.execCommand("copy");
-      copyButton.textContent = "JSON Copied!";
-    });
-  </script>
+  <script src="form.js"></script>
 </body>
 </html>
+.form-group {
+  margin-bottom: 10px;
+}
+
+#inspiration-counter {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.json-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.copy-button {
+  margin-bottom: 10px;
+}
+
+.json-display {
+  width: 100%;
+  max-width: 600px;
+  overflow: auto;
+  padding: 10px;
+  background-color: #f0f0f0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+const form = document.getElementById("form");
+const inspirationTextarea = document.getElementById("recent-inspiration");
+const inspirationCounter = document.getElementById("inspiration-counter");
+const jsonContainer = document.getElementById("json-container");
+const jsonDisplay = document.getElementById("json-display");
+const copyButton = document.getElementById("copy-button");
+
+const maxInspirationLength = inspirationTextarea.getAttribute("maxlength");
+const colors = {
+  blue: "rgb(0, 128, 255)",
+  yellow: "rgb(255, 255, 0)",
+  red: "rgb(255, 0, 0)"
+};
+
+inspirationTextarea.addEventListener("input", () => {
+  const currentLength = inspirationTextarea.value.length;
+  inspirationCounter.textContent = `${currentLength}/${maxInspirationLength} characters`;
+  if (currentLength <= 200) {
+    inspirationCounter.style.color = colors.blue;
+  } else if (currentLength <= 250) {
+    inspirationCounter.style.color = colors.yellow;
+  } else {
+    inspirationCounter.style.color = colors.red;
+  }
+});
+
+form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.target);
+  const submission = Object.fromEntries(formData.entries());
+  const wordOfTheDay = generateWordOfTheDay();
+  submission["word-of-the-day"] = wordOfTheDay;
+  const jsonCode = JSON.stringify(submission, null, 2);
+  const codeDisplay = document.createElement("pre");
+  codeDisplay.textContent = jsonCode;
+  jsonContainer.appendChild(codeDisplay);
+  copyButton.removeAttribute("disabled");
+  form.reset();
+});
+
+function generateWordOfTheDay() {
+  const words = ["serendipity", "euphoria", "syzygy", "ineffable", "petrichor", "luminescence", "ethereal", "supine", "incandescent", "diaphanous"];
+  const randomIndex = Math.floor(Math.random() * words.length);
+  return words[randomIndex];
+}
+
