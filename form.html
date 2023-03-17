@@ -1,0 +1,133 @@
+<div class="container">
+  <h1>Inscription Generator</h1>
+  <form id="inscription-form">
+    <label for="author-input">Author:</label>
+    <input type="text" id="author-input" name="author" required><br><br>
+    <label for="title-input">Title:</label>
+    <input type="text" id="title-input" name="title" required><br><br>
+    <label for="message-input">Message:</label><br>
+    <textarea id="message-input" name="message" maxlength="500" required></textarea><br>
+    <div id="message-count"></div><br>
+    <label for="positive-symbol-input">Positive Symbol:</label>
+    <select id="positive-symbol-input" name="positiveSymbol">
+      <option value="🌞">Sun</option>
+      <option value="🌸">Flower</option>
+      <option value="🌈">Rainbow</option>
+      <option value="🌺">Hibiscus</option>
+      <option value="🍀">Four-Leaf Clover</option>
+      <option value="🦋">Butterfly</option>
+      <option value="🌟">Star</option>
+      <option value="💖">Heart</option>
+      <option value="🌼">Daisy</option>
+      <option value="🐬">Dolphin</option>
+    </select><br><br>
+    <button type="button" id="generate-button">Generate Inscription</button>
+  </form>
+  <div id="output-container">
+    <h2>Your Inscription:</h2>
+    <div id="output"></div>
+    <button type="button" id="copy-button">Copy JSON to Clipboard</button>
+  </div>
+</div>
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+#message-count {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+#output-container {
+  display: none;
+}
+
+#output {
+  border: 1px solid #ccc;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-bottom: 10px;
+}
+
+#copy-button {
+  display: block;
+  margin: auto;
+}
+
+const textarea = document.querySelector("#inscription");
+const charCounter = document.querySelector("#char-count");
+const generateBtn = document.querySelector("#generate");
+const copyBtn = document.querySelector("#copy");
+const jsonOutput = document.querySelector("#json-output");
+
+// Function to generate random positive symbol
+function generateSymbol() {
+  const symbols = ["✨", "🌟", "💫", "🌞", "🌈", "🌻", "🌺", "🌸", "🌼", "🌷", "🌹", "💐", "🌱"];
+  const randomIndex = Math.floor(Math.random() * symbols.length);
+  return symbols[randomIndex];
+}
+
+// Function to generate JSON
+function generateJSON() {
+  const inscription = textarea.value;
+  const identifier = Math.random().toString(36).substr(2, 9);
+  const date = new Date().toISOString().slice(0, 10);
+  const positiveSymbol = generateSymbol();
+
+  const inscriptionData = {
+    "inscription": inscription,
+    "identifier": identifier,
+    "date": date,
+    "positiveSymbol": positiveSymbol
+  }
+
+  const jsonData = JSON.stringify(inscriptionData, null, 2);
+  jsonOutput.value = jsonData;
+}
+
+// Function to copy JSON to clipboard
+function copyJSON() {
+  jsonOutput.select();
+  document.execCommand("copy");
+  alert("JSON copied to clipboard!");
+}
+
+// Add event listeners
+textarea.addEventListener("input", () => {
+  const charCount = textarea.value.length;
+  charCounter.textContent = `${charCount}/500`;
+
+  // Change color of character counter based on length
+  if (charCount > 400) {
+    charCounter.style.color = "#FF0000";
+  } else if (charCount > 200) {
+    charCounter.style.color = "#FFA500";
+  } else {
+    charCounter.style.color = "#000000";
+  }
+});
+
+generateBtn.addEventListener("click", generateJSON);
+copyBtn.addEventListener("click", copyJSON);
