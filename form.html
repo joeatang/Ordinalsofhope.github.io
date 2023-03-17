@@ -68,6 +68,8 @@
   white-space: pre-wrap;
   word-break: break-all;
 }
+<head>
+  <script>
 const form = document.getElementById("form");
 const inspirationTextarea = document.getElementById("recent-inspiration");
 const inspirationCounter = document.getElementById("inspiration-counter");
@@ -113,4 +115,5 @@ function generateWordOfTheDay() {
   const randomIndex = Math.floor(Math.random() * words.length);
   return words[randomIndex];
 }
-
+  </script>
+</head>
