@@ -73,29 +73,20 @@
 <head>
   <script>
 const form = document.getElementById("form");
+const jsonContainer = document.getElementById("json-container");
+const copyButton = document.createElement("button");
+copyButton.setAttribute("id", "copy-button");
+copyButton.setAttribute("disabled", "");
+copyButton.textContent = "Copy JSON to Clipboard";
+jsonContainer.appendChild(copyButton);
+
 const inspirationTextarea = document.getElementById("recent-inspiration");
 const inspirationCounter = document.getElementById("inspiration-counter");
-const jsonContainer = document.getElementById("json-container");
-const jsonDisplay = document.getElementById("json-display");
-const copyButton = document.getElementById("copy-button");
-
 const maxInspirationLength = inspirationTextarea.getAttribute("maxlength");
-const colors = {
-  blue: "rgb(0, 128, 255)",
-  yellow: "orange",
-  red: "rgb(255, 0, 0)"
-};
 
 inspirationTextarea.addEventListener("input", () => {
   const currentLength = inspirationTextarea.value.length;
   inspirationCounter.textContent = `${currentLength}/${maxInspirationLength} characters`;
-  if (currentLength <= 200) {
-    inspirationCounter.style.color = colors.blue;
-  } else if (currentLength <= 250) {
-    inspirationCounter.style.color = colors.yellow;
-  } else {
-    inspirationCounter.style.color = colors.red;
-  }
 });
 
 form.addEventListener("submit", async (event) => {
@@ -120,7 +111,9 @@ form.addEventListener("submit", async (event) => {
 
     const jsonResponse = await response.json();
     const jsonCode = JSON.stringify(jsonResponse, null, 2);
-    jsonDisplay.textContent = jsonCode;
+    const codeDisplay = document.createElement("pre");
+    codeDisplay.textContent = jsonCode;
+    jsonContainer.appendChild(codeDisplay);
     copyButton.removeAttribute("disabled");
 
   } catch (error) {
@@ -129,6 +122,16 @@ form.addEventListener("submit", async (event) => {
   }
 
   form.reset();
+});
+
+copyButton.addEventListener("click", () => {
+  const range = document.createRange();
+  range.selectNodeContents(jsonContainer.querySelector("pre"));
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  document.execCommand("copy");
+  copyButton.textContent = "JSON Copied!";
 });
 
 function generateWordOfTheDay() {
