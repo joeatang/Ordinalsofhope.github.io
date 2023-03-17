@@ -4,6 +4,29 @@
   <meta charset="UTF-8">
   <title>Inspiration Form</title>
   <link rel="stylesheet" href="form.css">
+  <style>
+    #inspiration-counter {
+      font-weight: bold;
+    }
+    .good {
+      color: green;
+    }
+    .warning {
+      color: orange;
+    }
+    .error {
+      color: red;
+    }
+    #json-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+    #copy-button {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
   <form id="form">
@@ -11,36 +34,31 @@
       <label for="title">Title</label>
       <input type="text" id="title" name="title" placeholder="Brief summary of entry" required>
     </div>
+<div class="form-group">
+  <label for="inscriber">Inscriber</label>
+  <input type="text" id="inscriber" name="inscriber" placeholder="Your name/pen name">
+</div>
 
-    <div class="form-group">
-      <label for="inscriber">Inscriber</label>
-      <input type="text" id="inscriber" name="inscriber" placeholder="Your name/pen name">
-    </div>
+<div class="form-group">
+  <label for="date">Date</label>
+  <input type="date" id="date" name="date" required>
+</div>
 
-    <div class="form-group">
-      <label for="date">Date</label>
-      <input type="date" id="date" name="date" required>
-    </div>
+<div class="form-group">
+  <label for="recent-inspiration">Recent Inspiration (max 280 characters)</label>
+  <textarea id="recent-inspiration" name="recent-inspiration" placeholder="What inspired you in the last 24 hours that made a difference or impact on you" required maxlength="280"></textarea>
+  <div id="inspiration-counter" class="good"></div>
+</div>
 
-    <div class="form-group">
-      <label for="recent-inspiration">Recent Inspiration (max 280 characters)</label>
-      <textarea id="recent-inspiration" name="recent-inspiration" placeholder="What inspired you in the last 24 hours that made a difference or impact on you" required maxlength="280"></textarea>
-      <div id="inspiration-counter"></div>
-    </div>
-
-    <button type="submit">Generate</button>
+<button type="submit">Generate</button>
   </form>
-
-  <div id="json-container"></div>
-
+  <div id="json-container">
+    <button id="copy-button" disabled>Copy JSON to Clipboard</button>
+  </div>
   <script>
     const form = document.getElementById("form");
     const jsonContainer = document.getElementById("json-container");
-    const copyButton = document.createElement("button");
-    copyButton.setAttribute("id", "copy-button");
-    copyButton.setAttribute("disabled", "");
-    copyButton.textContent = "Copy JSON to Clipboard";
-    jsonContainer.appendChild(copyButton);
+    const copyButton = document.getElementById("copy-button");
 
     const inspirationTextarea = document.getElementById("recent-inspiration");
     const inspirationCounter = document.getElementById("inspiration-counter");
@@ -49,6 +67,13 @@
     inspirationTextarea.addEventListener("input", () => {
       const currentLength = inspirationTextarea.value.length;
       inspirationCounter.textContent = `${currentLength}/${maxInspirationLength} characters`;
+      if (currentLength < maxInspirationLength * 0.8) {
+        inspirationCounter.className = "good";
+      } else if (currentLength < maxInspirationLength) {
+        inspirationCounter.className = "warning";
+      } else {
+        inspirationCounter.className = "error";
+      }
     });
 
     form.addEventListener("submit", (event) => {
@@ -72,6 +97,4 @@
       document.execCommand("copy");
       copyButton.textContent = "JSON Copied!";
     });
-  </script>
-</body>
-</html>
+  </script
