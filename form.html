@@ -105,11 +105,14 @@ form.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(event.target);
   const submission = Object.fromEntries(formData.entries());
+  const wordOfTheDay = generateWordOfTheDay();
+  submission["word-of-the-day"] = wordOfTheDay;
   const jsonCode = JSON.stringify(submission, null, 2);
   const codeDisplay = document.createElement("pre");
   codeDisplay.textContent = jsonCode;
   jsonContainer.innerHTML = '';
   jsonContainer.appendChild(codeDisplay);
+  jsonContainer.appendChild(copyButton);
   copyButton.removeAttribute("disabled");
   form.reset();
 });
@@ -141,6 +144,7 @@ generateButton.addEventListener("click", () => {
   codeDisplay.textContent = jsonCode;
   jsonContainer.innerHTML = '';
   jsonContainer.appendChild(codeDisplay);
+  jsonContainer.appendChild(copyButton);
   copyButton.removeAttribute("disabled");
 });
   </script>
